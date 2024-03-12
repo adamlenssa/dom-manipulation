@@ -38,3 +38,53 @@
  */
 
 // Your code goes here...
+const cards = document.querySelector('.cardsContainer')
+let localFavorites = JSON.parse(localStorage.getItem('favorites'))
+if (!localFavorites) {
+   localStorage.setItem('favorites',JSON.stringify([]));
+   console.log('setting new local storage')
+   localFavorites = JSON.parse(localStorage.getItem('favorites'))
+}
+
+const setToRed = () => {
+   console.log(localFavorites);
+  const boxes = document.querySelectorAll('.card');
+  for (const box of boxes) {
+   if (localFavorites.includes(box.id)) {
+         box.classList.add('red')
+         box.dataset.fav = 'true'
+   } else {
+      box.classList.remove('red')
+      box.dataset.fav = false
+   }
+  }
+}
+
+const toFavorites = (m) => {
+   localFavorites.push(m.id)
+   localStorage.setItem('favorites', JSON.stringify(localFavorites))
+}
+ const deleteFromFavorites = (m) => {
+   localFavorites.splice(localFavorites.indexOf(m.id), 1);
+   localStorage.setItem('favorites', JSON.stringify(localFavorites));
+ }
+
+
+
+
+
+const callbackFn = (m) => {
+   const item = m.target;
+   if (item.classList.contains('card')) {
+      if (item.dataset.fav === 'false') {
+         toFavorites(item)
+         setToRed()
+      } else {
+      deleteFromFavorites(item)
+      setToRed()
+      }
+   }
+}
+setToRed()
+cards.addEventListener('click', callbackFn)
+// localStorage.clear()
